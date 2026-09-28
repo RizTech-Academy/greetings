@@ -1,0 +1,50 @@
+# A Deployment declares the desired state — "run 2 replicas of this image" —
+# and Kubernetes continuously works to make reality match: it creates the pods,
+# replaces them if they die, and rolls out new versions.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: greetings
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: greetings
+  template:
+    metadata:
+      labels:
+        app: greetings
+    spec:
+      containers:
+        - name: greetings
+          image: greetings:1.0
+          ports:
+            - containerPort: 3000
+          # Configuration comes from the ConfigMap — not baked into the image.
+          envFrom:
+            - configMapRef:
+                name: greetings-config
+          # Resource requests/limits let the scheduler place pods and stop one
+          # pod starving the node.
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "64Mi"
+            limits:
+              cpu: "250m"
+              memory: "128Mi"
+          # Liveness: is the app alive? If this fails, Kubernetes restarts the
+          # pod. Readiness: is it ready for traffic? If this fails, the pod is
+          # removed from the Service until it passes again.
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            initialDelaySeconds: 3
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            initialDelaySeconds: 2
+            periodSeconds: 5

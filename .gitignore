@@ -1,0 +1,12 @@
+node_modules/
+npm-debug.log
+.DS_Store
+.env
+# Terraform
+terraform/.terraform/
+terraform/.terraform.lock.hcl
+terraform/terraform.tfstate
+terraform/terraform.tfstate.*
+terraform/out/
+# Kubernetes / kind
+kind-kubeconfig

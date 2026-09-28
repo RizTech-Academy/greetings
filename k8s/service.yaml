@@ -1,0 +1,14 @@
+# A Service gives the pods one stable address. Pods come and go (and change IP);
+# the Service's name and ClusterIP stay constant, and it load-balances across
+# whichever pods currently match its selector.
+apiVersion: v1
+kind: Service
+metadata:
+  name: greetings
+spec:
+  type: ClusterIP
+  selector:
+    app: greetings # routes to every pod with this label
+  ports:
+    - port: 80 # the port the Service listens on
+      targetPort: 3000 # the container port it forwards to

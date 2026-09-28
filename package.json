@@ -1,0 +1,16 @@
+{
+  "name": "greetings",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "A tiny web service used to learn Docker, Kubernetes and CI/CD in the RizTech Academy DevOps course.",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "redis": "^4.7.0"
+  }
+}

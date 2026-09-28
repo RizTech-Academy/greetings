@@ -1,0 +1,26 @@
+# Docker Compose describes the whole local stack — the app and the Redis it
+# talks to — so one command (`docker compose up`) starts everything, wired
+# together, the same on every machine.
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000" # host:container — reach the app at http://localhost:3000
+    environment:
+      GREETING: "Hello"
+      # Compose puts every service on a shared network where the service name
+      # ('redis') resolves to that container — no IPs to hard-code.
+      REDIS_URL: "redis://redis:6379"
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:7-alpine
+    volumes:
+      # A named volume persists Redis's data across `down`/`up`, so the visit
+      # counter survives a restart. Without it, the data lives only in the
+      # container and is lost when the container is removed.
+      - redis-data:/data
+
+volumes:
+  redis-data:

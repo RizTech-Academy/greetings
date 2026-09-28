@@ -1,0 +1,20 @@
+name: CI
+
+# Run on every push to main and every pull request — so nothing merges untested.
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci # install exactly what the lockfile specifies
+      - run: npm test # run the test suite
+      - run: docker build -t greetings:${{ github.sha }} . # confirm the image builds
